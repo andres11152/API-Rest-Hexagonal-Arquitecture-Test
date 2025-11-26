@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1",
+    "name": "Laptop Pro X animal",
+    "price": 999900,
+    "rating": 4.8,
+    "image_url": "https://example.com/images/laptop_pro_x.jpg",
+    "description": "Una laptop de alto rendimiento para profesionales creativos y desarrolladores. Potencia y portabilidad en un diseño elegante.",
+    "specs": {
+      "screen": "15.6 pulgadas, 4K UHD",
+      "processor": "Intel Core i9, 12th Gen 2",
+      "ram": "32GB DDR5",
+      "storage": "1TB NVMe SSD",
+      "graphics": "NVIDIA GeForce RTX 4070"
+    }
+  },
+  {
+    "id": "2",
+    "name": "Smartphone Galaxy S25",
+    "price": 899900,
+    "rating": 4.7,
+    "image_url": "https://example.com/images/galaxy_s25.jpg",
+    "description": "El último smartphone con una cámara revolucionaria y una pantalla inmersiva. Conectividad 5G y rendimiento sin igual.",
+    "specs": {
+      "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
+      "processor": "Snapdragon 8 Gen 4",
+      "ram": "12GB",
+      "storage": "256GB UFS 4.0",
+      "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
+    }
+  },
+  {
+    "id": "3",
+    "name": "Auriculares Inalámbricos SoundWave",
+    "price": 300000,
+    "rating": 4.9,
+    "image_url": "https://example.com/images/soundwave_headphones.jpg",
+    "description": "Sumérgete en tu música con cancelación de ruido activa y una calidad de sonido excepcional. Hasta 30 horas de batería.",
+    "specs": {
+      "type": "Over-ear",
+      "connectivity": "Bluetooth 5.3",
+      "noise_cancellation": "Active Noise Cancelling (ANC)",
+      "battery_life": "30 horas",
+      "color": "Negro Mate"
+    }
+  },
+  {
+    "id": "4",
+    "name": "Smartwatch Chrono 50",
+    "price": 350700,
+    "rating": 4.6,
+    "image_url": "https://example.com/images/chrono_5.jpg",
+    "description": "Un reloj inteligente que monitoriza tu salud, te mantiene conectado y tiene un diseño clásico. Resistente al agua y con GPS integrado.",
+    "specs": {
+      "display": "1.4 pulgadas, AMOLED",
+      "sensors": "Frecuencia cardíaca, SpO2, GPS, NFC",
+      "water_resistance": "5 ATM",
+      "material": "Acero inoxidable",
+      "os": "Wear OS 5"
+    }
+  }
+]
