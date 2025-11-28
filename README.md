@@ -89,7 +89,7 @@ Asegúrate de tener Node.js (v16 o superior) y npm instalados.
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone https://github.com/tu-usuario/tu-repositorio.git
+    git clone https://github.com/andres11152/API-Rest-Hexagonal-Arquitecture-Test
     cd tu-repositorio
     ```
 
