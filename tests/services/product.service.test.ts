@@ -85,23 +85,25 @@ describe("ProductService", () => {
   });
 
   describe("compareProducts", () => {
-    it("should throw ProductNotFoundException if one of the products does not exist", async () => {
-      // Arrange: Uno existe, el otro no
-      mockProductRepository.findById
-        .mockResolvedValueOnce(mockProduct1)
-        .mockResolvedValueOnce(null);
+    // Configuración del mock para que sea más robusto y no dependa del orden de las llamadas.
+    beforeEach(() => {
+      mockProductRepository.findById.mockImplementation(async (id: string) => {
+        if (id === "1") return mockProduct1;
+        if (id === "2") return mockProduct2;
+        return null; // Devuelve null para cualquier otro ID.
+      });
+    });
 
+    it("should throw ProductNotFoundException if one of the products does not exist", async () => {
       // Act & Assert
+      // La implementación del mock ya maneja el caso de que el producto "99" no exista.
       await expect(productService.compareProducts("1", "99")).rejects.toThrow(
         ProductNotFoundException,
       );
     });
 
     it("should return the comparison between two products", async () => {
-      // Arrange: Ambos productos existen
-      mockProductRepository.findById
-        .mockResolvedValueOnce(mockProduct1)
-        .mockResolvedValueOnce(mockProduct2);
+      // Arrange: La implementación del mock ya maneja el caso de que ambos productos existan.
 
       // Act
       const result = await productService.compareProducts("1", "2");

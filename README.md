@@ -7,11 +7,11 @@
   <!-- Badges -->
   <p align="center">
     <img src="https://img.shields.io/badge/Node.js-18.x-blue?logo=node.js" alt="Node.js">
-    <img src="https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript" alt="TypeScript">
+    <img src="https://img.shields.io/badge/TypeScript-4.x-blue?logo=typescript" alt="TypeScript">
     <a href="https://github.com/andres11152/API-Rest-Hexagonal-Arquitecture-Test/actions/workflows/ci.yml"><img src="https://github.com/andres11152/API-Rest-Hexagonal-Arquitecture-Test/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
     <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" alt="Code Style: Prettier">
     <img src="https://img.shields.io/badge/Express.js-4.x-green?logo=express" alt="Express.js">
-    <img src="https://img.shields.io/badge/Jest-29.x-red?logo=jest" alt="Jest">
+    <img src="https://img.shields.io/badge/Jest-27.x-red?logo=jest" alt="Jest">
     <img src="https://img.shields.io/badge/Arquitectura-Hexagonal-purple" alt="Hexagonal Architecture">
   </p>
 </div>
