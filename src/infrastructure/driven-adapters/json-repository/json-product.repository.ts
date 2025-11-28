@@ -5,9 +5,8 @@ import { IProductRepository } from "@/domain/repositories/product-repository.int
 
 /**
  * @class JsonProductRepository
- * @description Adaptador de persistencia que implementa IProductRepository
- * para leer datos de productos desde un archivo JSON.
- * Se ubica en la capa de Infraestructura.
+ * @description Adaptador de persistencia que implementa IProductRepository.
+ * Lee un JSON y convierte los datos crudos en instancias ricas de la entidad Product.
  */
 export class JsonProductRepository implements IProductRepository {
   private readonly dbPath = path.resolve(
@@ -20,36 +19,39 @@ export class JsonProductRepository implements IProductRepository {
   /**
    * @private
    * @method readDatabase
-   * @description Lee y parsea el archivo JSON que actúa como base de datos.
-   * @returns {Promise<Product[]>} Una promesa que resuelve a un arreglo de productos.
-   * Retorna un arreglo vacío si ocurre un error.
+   * @description Lee el JSON y mapea los datos crudos a instancias de la Clase Product.
    */
   private async readDatabase(): Promise<Product[]> {
     try {
       const data = await fs.readFile(this.dbPath, "utf-8");
-      return JSON.parse(data) as Product[];
+      const rawProducts = JSON.parse(data);
+
+      // AQUÍ ESTÁ LA CLAVE: Mapeamos el objeto plano a una instancia real de la clase.
+      // Esto activa el constructor y las validaciones de la entidad.
+      return rawProducts.map((item: any) => new Product(
+        item.id,
+        item.name,
+        item.price,
+        item.rating,
+        item.image_url,
+        item.description,
+        item.specs
+      ));
+
     } catch (error) {
       console.error("Error reading or parsing the database file:", error);
-      // Si el archivo no existe o hay un error de parseo, retornamos un array vacío.
       return [];
     }
   }
 
-  /**
-   * @description Obtiene todos los productos de la base de datos en memoria.
-   * @returns {Promise<Product[]>}
-   */
   public async findAll(): Promise<Product[]> {
+    // Como readDatabase ya devuelve instancias de la clase, esto es directo.
     return this.readDatabase();
   }
 
-  /**
-   * @description Busca un producto por su ID.
-   * @param {string} id - El ID del producto a buscar.
-   * @returns {Promise<Product | null>} El producto encontrado o null.
-   */
   public async findById(id: string): Promise<Product | null> {
     const products = await this.readDatabase();
+    // Aquí 'products' ya contiene objetos con superpoderes (validaciones, métodos)
     const product = products.find((p) => p.id === id);
     return product || null;
   }
