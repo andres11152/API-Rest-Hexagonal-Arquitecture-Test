@@ -1,0 +1,46 @@
+# .github/workflows/ci.yml
+
+name: CI # El nombre del workflow que aparecerá en GitHub Actions
+
+# Disparadores: Cuándo se ejecutará este workflow
+on:
+  push:
+    branches: [ main, develop ] # Al hacer push a las ramas main o develop
+  pull_request:
+    branches: [ main, develop ] # Al crear un Pull Request hacia main o develop
+
+jobs:
+  # Definimos un "trabajo" llamado "build-and-test"
+  build-and-test:
+    name: Build and Test
+    # La máquina virtual en la que se ejecutará (Ubuntu es estándar y eficiente)
+    runs-on: ubuntu-latest
+
+    # Estrategia para probar en múltiples versiones de Node.js (práctica recomendada)
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      # 1. Clona tu repositorio en la máquina virtual
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configura la versión de Node.js especificada en la matriz
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm' # Habilita el caché para acelerar futuras instalaciones
+
+      # 3. Instala las dependencias de forma limpia y rápida
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Ejecuta el linter para verificar la calidad del código
+      - name: Run linter
+        run: npm run lint
+
+      # 5. Ejecuta las pruebas
+      - name: Run tests
+        run: npm test
