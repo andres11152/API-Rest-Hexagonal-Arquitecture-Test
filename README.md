@@ -4,7 +4,6 @@
     A robust RESTful API built with Node.js, Express, and TypeScript, following the principles of Hexagonal Architecture.
   </p>
   
-  <!-- Badges -->
   <p align="center">
     <img src="https://img.shields.io/badge/Node.js-18.x-blue?logo=node.js" alt="Node.js">
     <img src="https://img.shields.io/badge/TypeScript-4.x-blue?logo=typescript" alt="TypeScript">
@@ -12,7 +11,7 @@
     <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" alt="Code Style: Prettier">
     <img src="https://img.shields.io/badge/Express.js-4.x-green?logo=express" alt="Express.js">
     <img src="https://img.shields.io/badge/Jest-27.x-red?logo=jest" alt="Jest">
-    <img src="https://img.shields.io/badge/Arquitectura-Hexagonal-purple" alt="Hexagonal Architecture">
+    <img src="https://img.shields.io/badge/Architecture-Hexagonal-purple" alt="Hexagonal Architecture">
   </p>
 </div>
 
@@ -20,17 +19,17 @@
 
 ## Table of Contents
 
-1.  🚀 Project Description
-2.  ✨ Features
-3.  🏛️ Architecture and Design Decisions
-4.  📂 Folder Structure
-5.  🛠️ Tech Stack
-6.  🏁 Installation and Setup
-7.  📦 Configuration
-8.  ✅ Code Quality
-9.  🧪 Testing
-10. 🔄 Continuous Integration (CI/CD)
-11. 📖 API Reference
+1.  [ Project Description](#-project-description)
+2.  [✨ Features](#-features)
+3.  [🏛️ Architecture and Design Decisions](#-architecture-and-design-decisions)
+4.  [📂 Folder Structure](#-folder-structure)
+5.  [🛠️ Tech Stack](#-tech-stack)
+6.  [🏁 Installation and Setup](#-installation-and-setup)
+7.  [📦 Configuration](#-configuration)
+8.  [✅ Code Quality](#-code-quality)
+9.  [🧪 Testing](#-testing)
+10. [🔄 Continuous Integration (CI/CD)](#-continuous-integration-cicd)
+11. [📖 API Reference](#-api-reference)
 
 ---
 
@@ -58,246 +57,242 @@ A strict separation has been implemented between the application's core (domain 
   - **Driving Adapters:** Initiate interaction, such as the REST API (Express controllers, routes).
   - **Driven Adapters:** Are controlled by the application, such as the repository implementation (`JsonProductRepository`) that connects to the data source.
 
+```mermaid
+graph TD
+    subgraph Infrastructure
+        A[Driving: REST API]
+        D[Driven: JSON Repository]
+    end
+
+    subgraph Application
+        B[Use Case: ProductService]
+    end
+
+    subgraph Domain
+        C[Port: IProductRepository]
+        E[Entities: Product, ProductComparison]
+    end
+
+    Client -- HTTP Request --> A
+    A -- Calls --> B
+    B -- Depends on --> C
+    D -- Implements --> C
+    B -- Uses --> E
+    D -- Reads/Writes --> DB[(Data Source: JSON File)]
 ```
-    +-------------------+      +----------------------+      +--------------------+
-    |   Driving         |      |     Application      |      |   Driven           |
-    |   Adapters        |----->|       (Ports)        |----->|   Adapters         |
-    | (Controllers)     |      |                      |      | (Repositories)     |
-    +-------------------+      +----------------------+      +--------------------+
-                                      |
-                                      v
-                              +----------------+
-                              |     Domain     |
-                              | (Entities)     |
-                              +----------------+
-```
 
-### Principios SOLID
+### SOLID Principles
+The design respects SOLID principles, with a strong emphasis on the **Dependency Inversion Principle (DIP)**. High-level layers (application) do not depend on low-level layers (infrastructure), but rather on abstractions (domain interfaces). This is achieved through **Dependency Injection**, manually configured in `server.ts` to keep the example explicit and simple.
 
-El diseño respeta los principios SOLID, con un fuerte énfasis en el **Principio de Inversión de Dependencias (DIP)**. Las capas de alto nivel (aplicación) no dependen de las de bajo nivel (infraestructura), sino de abstracciones (interfaces del dominio). Esto se logra mediante **Inyección de Dependencias**, configurada manualmente en `server.ts` para mantener la simplicidad del ejemplo.
+### Key Design Decisions
+- **Tactical Persistence:** For this proof of concept, a repository reading from a `products.json` file was implemented. This simplifies setup and execution. Thanks to the architecture, migrating to **PostgreSQL** or **MongoDB** would only require creating a new repository implementing `IProductRepository` and changing one line in the dependency injection config, without touching the business logic.
+- **Centralized Error Handling:** An Express middleware captures custom domain exceptions (e.g., `ProductNotFoundException`) and translates them into appropriate HTTP responses (e.g., `404 Not Found`), keeping controllers clean.
+- **Input Validation:** `express-validator` is used in middlewares to validate input data at the route level, delegating this responsibility and keeping controllers focused on their main task.
 
-### Otras Decisiones Clave
-
-- **Persistencia Táctica:** Para esta prueba, se implementó un repositorio que lee datos desde un archivo `products.json`. Esta decisión simplifica la configuración y ejecución. Gracias a la arquitectura, migrar a **PostgreSQL** o **MongoDB** solo requeriría crear un nuevo repositorio que implemente `IProductRepository` y cambiar una línea en la configuración de inyección de dependencias, sin afectar el resto de la aplicación.
-- **Manejo de Errores Centralizado:** Un middleware de Express captura excepciones personalizadas del dominio (ej. `ProductNotFoundException`) y las traduce a respuestas HTTP apropiadas (ej. `404 Not Found`), manteniendo los controladores limpios.
-- **Validación de Entrada:** Se utiliza `express-validator` en middlewares para validar los datos de entrada a nivel de ruta, delegando esta responsabilidad y manteniendo los controladores enfocados en su tarea principal.
-
-## 🛠️ Stack Tecnológico
-
-### 📂 Estructura de Carpetas
-
-La estructura del directorio `src` está organizada para reflejar claramente la Arquitectura Hexagonal:
+## 📂 Folder Structure
+The `src` directory structure is organized to clearly reflect the Hexagonal Architecture:
 
 ```
 src/
 ├── application/
 │   └── services/
-│       └── product.service.ts      # Orquesta los casos de uso (lógica de aplicación)
+│       └── product.service.ts       # Orchestrates use cases (application logic)
 ├── domain/
 │   ├── entities/
-│   │   ├── product.entity.ts       # Entidad de dominio rica para Product
-│   │   └── product-comparison.entity.ts # Entidad de dominio rica para Comparison
+│   │   ├── product.entity.ts        # Rich Domain Entity for Product
+│   │   └── product-comparison.entity.ts # Rich Domain Entity for Comparison
 │   ├── exceptions/
-│   │   └── product-not-found.exception.ts # Excepciones específicas del dominio
+│   │   └── product-not-found.exception.ts # Domain-specific exceptions
 │   └── repositories/
-│       └── product-repository.interface.ts # Puerto de repositorio (contrato)
+│       └── product-repository.interface.ts # Repository Port (Contract)
 ├── infrastructure/
-│   ├── driven-adapters/            # Adaptadores controlados por la aplicación
+│   ├── driven-adapters/             # Adapters controlled by the application
 │   │   └── json-repository/
-│   │       └── json-product.repository.ts # Adaptador que implementa el puerto
-│   └── driving-adapters/           # Adaptadores que controlan la aplicación
+│   │       └── json-product.repository.ts # Adapter implementing the port
+│   └── driving-adapters/            # Adapters that control the application
 │       └── api-rest/
 │           ├── controllers/
 │           ├── mappers/
 │           ├── middlewares/
 │           └── routes/
 ├── data/
-│   └── products.json               # Fuente de datos (detalle de infraestructura)
-├── app.ts                          # Configuración de Express y middlewares
-└── server.ts                       # Punto de entrada, inyección de dependencias y arranque del servidor
+│   └── products.json                # Data source (Infrastructure detail)
+├── app.ts                           # Express and middleware configuration
+└── server.ts                        # Entry point, Dependency Injection, and server start
 ```
 
-## 🛠️ Stack Tecnológico
-
-- **Lenguaje:** TypeScript
+## 🛠️ Tech Stack
+- **Language:** TypeScript
 - **Backend:** Node.js, Express.js
 - **Testing:** Jest, Supertest
-- **Validación:** `express-validator`
-- **Calidad de Código:** ESLint, Prettier
+- **Validation:** `express-validator`
+- **Code Quality:** ESLint, Prettier
 
-## 🏁 Instalación y Ejecución
+## 🏁 Installation and Setup
+Ensure you have Node.js (v16 or higher) and npm installed.
 
-Asegúrate de tener Node.js (v16 o superior) y npm instalados.
-
-1.  **Clonar el repositorio:**
-
+1.  **Clone the repository:**
     ```bash
     git clone https://github.com/andres11152/API-Rest-Hexagonal-Arquitecture-Test
     cd API-Rest-Hexagonal-Arquitecture-Test
     ```
 
-2.  **Instalar dependencias:**
-
+2.  **Install dependencies:**
     ```bash
     npm install
     ```
 
-3.  **Ejecutar en modo desarrollo:**
-    El servidor se iniciará en `http://localhost:8080` y se recargará automáticamente con los cambios.
-
+3.  **Run in development mode:** The server will start at `http://localhost:8080` and automatically reload on changes.
     ```bash
     npm run dev
     ```
 
-4.  **Construir para producción:**
-    Esto compilará el código TypeScript a JavaScript en el directorio `dist/`.
-
+4.  **Build for production:** This compiles the TypeScript code to JavaScript in the `dist/` directory.
     ```bash
     npm run build
     ```
 
-5.  **Ejecutar en modo producción:**
-    Ejecuta la aplicación desde el código compilado.
+5.  **Run in production mode:** Runs the application from the compiled code.
     ```bash
     npm start
     ```
 
-## 📦 Configuración
-
-El proyecto puede ser configurado a través de variables de entorno. Para ello, puedes crear un archivo `.env` en la raíz del proyecto.
+## 📦 Configuration
+The project can be configured via environment variables. You can create a `.env` file in the project root.
 
 ```env
-# Puerto en el que correrá el servidor
+# Port on which the server will run
 PORT=8080
 ```
 
-## ✅ Calidad de Código
-
-Se utiliza ESLint y Prettier para mantener un estilo de código limpio y consistente. Para verificar y formatear el código, puedes usar los siguientes comandos:
+## ✅ Code Quality
+ESLint and Prettier are used to maintain a clean and consistent code style. To check and format the code, you can use the following commands:
 
 ```bash
-# Ejecutar el linter para encontrar errores de estilo
+# Run the linter to find style errors
 npm run lint
 
-# Formatear automáticamente el código
+# Automatically format the code
 npm run format
 ```
 
-## 🧪 Pruebas
+## 🧪 Testing
+The project includes unit and integration tests to ensure the quality and correct functioning of the business logic and endpoints.
 
-El proyecto incluye tests unitarios y de integración para garantizar la calidad y el correcto funcionamiento de la lógica de negocio y los endpoints.
-
-Para ejecutar todas las pruebas:
+To run all tests:
 
 ```bash
 npm test
 ```
 
-## 📖 Referencia de la API
+## 📖 API Reference
 
-### `GET /products`
+### GET /products
+Returns a list of all available products.
 
-Retorna una lista de todos los productos disponibles.
-
-- **Respuesta Exitosa (`200 OK`):**
-  ```json
-  [
-    {
-      "id": "1",
-      "name": "Laptop Pro X animal X prueba",
-      "price": 999900,
-      "rating": 4.8,
-      "image": "https://example.com/images/laptop_pro_x.jpg",
-      "description": "Una laptop de alto rendimiento para profesionales creativos y desarrolladores. Potencia y portabilidad en un diseño elegante.",
-      "specs": {
-        "screen": "15.6 pulgadas, 4K UHD",
-        "processor": "Intel Core i9, 12th Gen 2",
-        "ram": "32GB DDR5",
-        "storage": "1TB NVMe SSD",
-        "graphics": "NVIDIA GeForce RTX 4070"
-      },
-      "currency": "COP",
-      "category": "General"
-    }
-  ]
-  ```
-
-### `GET /products/{id}`
-
-Retorna un producto específico según su ID.
-
-- **Parámetros de URL:**
-  - `id` (string, requerido): El ID del producto.
-- **Respuesta Exitosa (`200 OK`):** Un objeto de producto (similar al del listado).
-- **Respuestas de Error:**
-  - `400 Bad Request`: Si el ID proporcionado no tiene un formato válido.
-  - `404 Not Found`: Si no se encuentra un producto con el ID especificado.
-
-### `GET /products/compare`
-
-Compara dos productos y devuelve un resumen de sus diferencias.
-
-- **Query Params:**
-  - `id1` (string, requerido): ID del primer producto.
-  - `id2` (string, requerido): ID del segundo producto.
-- **Respuesta Exitosa (`200 OK`):**
-  ```json
+**Success Response (`200 OK`):**
+```json
+[
   {
-    "product1": {
-      "id": "1",
-      "name": "Laptop Pro X animal X prueba",
-      "price": 999900,
-      "rating": 4.8,
-      "image": "https://example.com/images/laptop_pro_x.jpg",
-      "description": "Una laptop de alto rendimiento para profesionales creativos y desarrolladores. Potencia y portabilidad en un diseño elegante.",
-      "specs": {
-        "screen": "15.6 pulgadas, 4K UHD",
-        "processor": "Intel Core i9, 12th Gen 2",
-        "ram": "32GB DDR5",
-        "storage": "1TB NVMe SSD",
-        "graphics": "NVIDIA GeForce RTX 4070"
-      },
-      "currency": "COP",
-      "category": "General"
+    "id": "1",
+    "name": "Laptop Pro X",
+    "price": 999900,
+    "rating": 4.8,
+    "image": "https://example.com/images/laptop_pro_x.jpg",
+    "description": "A high-performance laptop for creative professionals and developers. Power and portability in an elegant design.",
+    "specs": {
+      "screen": "15.6 inch, 4K UHD",
+      "processor": "Intel Core i9, 12th Gen 2",
+      "ram": "32GB DDR5",
+      "storage": "1TB NVMe SSD",
+      "graphics": "NVIDIA GeForce RTX 4070"
     },
-    "product2": {
-      "id": "2",
-      "name": "Smartphone Galaxy S25",
-      "price": 899900,
-      "rating": 4.7,
-      "image": "https://example.com/images/galaxy_s25.jpg",
-      "description": "El último smartphone con una cámara revolucionaria y una pantalla inmersiva. Conectividad 5G y rendimiento sin igual.",
-      "specs": {
-        "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
-        "processor": "Snapdragon 8 Gen 4",
-        "ram": "12GB",
-        "storage": "256GB UFS 4.0",
-        "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
-      },
-      "currency": "COP",
-      "category": "General"
+    "currency": "COP",
+    "category": "General"
+  }
+]
+```
+
+### GET /products/{id}
+Returns a specific product by its ID.
+
+**URL Parameters:**
+- `id` (string, required): The ID of the product.
+
+**Success Response (`200 OK`):** A product object (similar to the listing).
+
+**Error Responses:**
+- `400 Bad Request`: If the provided ID is invalid.
+- `404 Not Found`: If no product is found with the specified ID.
+
+### GET /products/compare
+Compares two products and returns a detailed summary of their differences.
+
+**Query Params:**
+- `id1` (string, required): ID of the first product.
+- `id2` (string, required): ID of the second product.
+
+**Success Response (`200 OK`):**
+```json
+{
+  "product1": {
+    "id": "1",
+    "name": "Laptop Pro X",
+    "price": 999900,
+    "rating": 4.8,
+    "image": "https://example.com/images/laptop_pro_x.jpg",
+    "description": "A high-performance laptop for creative professionals and developers. Power and portability in an elegant design.",
+    "specs": {
+      "screen": "15.6 inch, 4K UHD",
+      "processor": "Intel Core i9, 12th Gen 2",
+      "ram": "32GB DDR5",
+      "storage": "1TB NVMe SSD",
+      "graphics": "NVIDIA GeForce RTX 4070"
     },
-    "comparison": {
-      "priceDifference": 100000,
-      "ratingDifference": 0.1,
-      "common_specs": [],
-      "unique_specs_product1": {
-        "screen": "15.6 pulgadas, 4K UHD",
-        "processor": "Intel Core i9, 12th Gen 2",
-        "ram": "32GB DDR5",
-        "storage": "1TB NVMe SSD",
-        "graphics": "NVIDIA GeForce RTX 4070"
-      },
-      "unique_specs_product2": {
-        "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
-        "processor": "Snapdragon 8 Gen 4",
-        "ram": "12GB",
-        "storage": "256GB UFS 4.0",
-        "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
-      }
+    "currency": "COP",
+    "category": "General"
+  },
+  "product2": {
+    "id": "2",
+    "name": "Smartphone Galaxy S25",
+    "price": 899900,
+    "rating": 4.7,
+    "image": "https://example.com/images/galaxy_s25.jpg",
+    "description": "The latest smartphone with a revolutionary camera and an immersive display. 5G connectivity and unparalleled performance.",
+    "specs": {
+      "screen": "6.8 inch, Dynamic AMOLED 2X",
+      "processor": "Snapdragon 8 Gen 4",
+      "ram": "12GB",
+      "storage": "256GB UFS 4.0",
+      "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
+    },
+    "currency": "COP",
+    "category": "General"
+  },
+  "comparison": {
+    "priceDifference": 100000,
+    "ratingDifference": 0.1,
+    "common_specs": [
+      "ram"
+    ],
+    "unique_specs_product1": {
+      "screen": "15.6 inch, 4K UHD",
+      "processor": "Intel Core i9, 12th Gen 2",
+      "ram": "32GB DDR5",
+      "storage": "1TB NVMe SSD",
+      "graphics": "NVIDIA GeForce RTX 4070"
+    },
+    "unique_specs_product2": {
+      "screen": "6.8 inch, Dynamic AMOLED 2X",
+      "processor": "Snapdragon 8 Gen 4",
+      "ram": "12GB",
+      "storage": "256GB UFS 4.0",
+      "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
     }
   }
-  ```
-- **Respuestas de Error:**
-  - `400 Bad Request`: Si `id1` o `id2` faltan en la consulta o no son válidos.
-  - `404 Not Found`: Si alguno de los productos no se encuentra.
+}
+```
+
+**Error Responses:**
+- `400 Bad Request`: If `id1` or `id2` are missing from the query or are invalid.
+- `404 Not Found`: If either of the products is not found.
