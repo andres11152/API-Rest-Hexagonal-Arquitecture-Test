@@ -14,24 +14,24 @@ describe("ProductService", () => {
   let productService: ProductService;
 
   // Datos de prueba
-  const mockProduct1: Product = {
-    id: "1",
-    name: "Laptop Pro X",
-    price: 999900,
-    rating: 4.8,
-    image_url: "",
-    description: "",
-    specs: {},
-  };
-  const mockProduct2: Product = {
-    id: "2",
-    name: "Smartphone S25",
-    price: 899900,
-    rating: 4.7,
-    image_url: "",
-    description: "",
-    specs: {},
-  };
+  const mockProduct1 = new Product(
+    "1",
+    "Laptop Pro X",
+    999900,
+    4.8,
+    "",
+    "",
+    {},
+  );
+  const mockProduct2 = new Product(
+    "2",
+    "Smartphone S25",
+    899900,
+    4.7,
+    "",
+    "",
+    {},
+  );
 
   beforeEach(() => {
     // Limpiamos los mocks y reiniciamos las instancias antes de cada prueba
