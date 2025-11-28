@@ -1,4 +1,4 @@
-import { Product } from './product.entity';
+import { Product } from "./product.entity";
 
 export interface ProductComparison {
   product1: Product;

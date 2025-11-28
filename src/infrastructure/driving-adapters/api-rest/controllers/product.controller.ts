@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { ProductService } from '@/application/services/product.service';
-import { ProductMapper } from '../mappers/product.mapper'; // <--- Importamos el Mapper
+import { Request, Response, NextFunction } from "express";
+import { ProductService } from "@/application/services/product.service";
+import { ProductMapper } from "../mappers/product.mapper"; // <--- Importamos el Mapper
 
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
@@ -32,11 +32,14 @@ export class ProductController {
       const id1 = req.query.id1 as string;
       const id2 = req.query.id2 as string;
 
-      const comparisonDomain = await this.productService.compareProducts(id1, id2);
-      
+      const comparisonDomain = await this.productService.compareProducts(
+        id1,
+        id2,
+      );
+
       // Transformamos el resultado complejo de comparación
       const response = ProductMapper.toComparisonDto(comparisonDomain);
-      
+
       res.json(response);
     } catch (error) {
       next(error);

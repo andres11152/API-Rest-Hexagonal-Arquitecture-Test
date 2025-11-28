@@ -1,7 +1,7 @@
-import { ProductService } from '@/application/services/product.service';
-import { ProductNotFoundException } from '@/domain/exceptions/product-not-found.exception';
-import { Product } from '@/domain/entities/product.entity';
-import { IProductRepository } from '@/domain/repositories/product-repository.interface';
+import { ProductService } from "@/application/services/product.service";
+import { ProductNotFoundException } from "@/domain/exceptions/product-not-found.exception";
+import { Product } from "@/domain/entities/product.entity";
+import { IProductRepository } from "@/domain/repositories/product-repository.interface";
 
 // Creamos un mock del repositorio. Jest reemplazará todas las funciones
 // de la interfaz con funciones mock.
@@ -10,12 +10,28 @@ const mockProductRepository: jest.Mocked<IProductRepository> = {
   findById: jest.fn(),
 };
 
-describe('ProductService', () => {
+describe("ProductService", () => {
   let productService: ProductService;
 
   // Datos de prueba
-  const mockProduct1: Product = { id: '1', name: 'Laptop Pro X', price: 999900, rating: 4.8, image_url: '', description: '', specs: {} };
-  const mockProduct2: Product = { id: '2', name: 'Smartphone S25', price: 899900, rating: 4.7, image_url: '', description: '', specs: {} };
+  const mockProduct1: Product = {
+    id: "1",
+    name: "Laptop Pro X",
+    price: 999900,
+    rating: 4.8,
+    image_url: "",
+    description: "",
+    specs: {},
+  };
+  const mockProduct2: Product = {
+    id: "2",
+    name: "Smartphone S25",
+    price: 899900,
+    rating: 4.7,
+    image_url: "",
+    description: "",
+    specs: {},
+  };
 
   beforeEach(() => {
     // Limpiamos los mocks y reiniciamos las instancias antes de cada prueba
@@ -25,8 +41,8 @@ describe('ProductService', () => {
     productService = new ProductService(mockProductRepository);
   });
 
-  describe('getAllProducts', () => {
-    it('should return all products from the repository', async () => {
+  describe("getAllProducts", () => {
+    it("should return all products from the repository", async () => {
       const mockProducts = [mockProduct1, mockProduct2];
       // Arrange: Simulamos que el repositorio devuelve una lista de productos
       mockProductRepository.findAll.mockResolvedValue(mockProducts);
@@ -40,45 +56,55 @@ describe('ProductService', () => {
     });
   });
 
-  describe('getProductById', () => {
-    it('should return a product by its id from the repository', async () => {
+  describe("getProductById", () => {
+    it("should return a product by its id from the repository", async () => {
       // Arrange
       mockProductRepository.findById.mockResolvedValue(mockProduct1);
 
       // Act
-      const product = await productService.getProductById('1');
+      const product = await productService.getProductById("1");
 
       // Assert
       expect(product).toEqual(mockProduct1);
-      expect(mockProductRepository.findById).toHaveBeenCalledWith('1');
+      expect(mockProductRepository.findById).toHaveBeenCalledWith("1");
     });
 
-    it('should throw ProductNotFoundException if product is not found', async () => {
+    it("should throw ProductNotFoundException if product is not found", async () => {
       // Arrange
       mockProductRepository.findById.mockResolvedValue(null);
 
       // Act & Assert
       // Verificamos que la llamada al servicio lance la excepción correcta.
-      await expect(productService.getProductById('99')).rejects.toThrow(ProductNotFoundException);
-      await expect(productService.getProductById('99')).rejects.toThrow('Producto con id 99 no encontrado');
+      await expect(productService.getProductById("99")).rejects.toThrow(
+        ProductNotFoundException,
+      );
+      await expect(productService.getProductById("99")).rejects.toThrow(
+        "Producto con id 99 no encontrado",
+      );
     });
   });
 
-  describe('compareProducts', () => {
-    it('should throw ProductNotFoundException if one of the products does not exist', async () => {
+  describe("compareProducts", () => {
+    it("should throw ProductNotFoundException if one of the products does not exist", async () => {
       // Arrange: Uno existe, el otro no
-      mockProductRepository.findById.mockResolvedValueOnce(mockProduct1).mockResolvedValueOnce(null);
+      mockProductRepository.findById
+        .mockResolvedValueOnce(mockProduct1)
+        .mockResolvedValueOnce(null);
 
       // Act & Assert
-      await expect(productService.compareProducts('1', '99')).rejects.toThrow(ProductNotFoundException);
+      await expect(productService.compareProducts("1", "99")).rejects.toThrow(
+        ProductNotFoundException,
+      );
     });
 
-    it('should return the comparison between two products', async () => {
+    it("should return the comparison between two products", async () => {
       // Arrange: Ambos productos existen
-      mockProductRepository.findById.mockResolvedValueOnce(mockProduct1).mockResolvedValueOnce(mockProduct2);
+      mockProductRepository.findById
+        .mockResolvedValueOnce(mockProduct1)
+        .mockResolvedValueOnce(mockProduct2);
 
       // Act
-      const result = await productService.compareProducts('1', '2');
+      const result = await productService.compareProducts("1", "2");
 
       // Assert
       expect(result).not.toBeNull();

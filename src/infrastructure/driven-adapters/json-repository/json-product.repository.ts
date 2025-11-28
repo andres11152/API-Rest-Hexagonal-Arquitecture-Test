@@ -1,7 +1,7 @@
-import { promises as fs } from 'node:fs';
-import path from 'node:path';
-import { Product } from '@/domain/entities/product.entity';
-import { IProductRepository } from '@/domain/repositories/product-repository.interface';
+import { promises as fs } from "node:fs";
+import path from "node:path";
+import { Product } from "@/domain/entities/product.entity";
+import { IProductRepository } from "@/domain/repositories/product-repository.interface";
 
 /**
  * @class JsonProductRepository
@@ -10,7 +10,12 @@ import { IProductRepository } from '@/domain/repositories/product-repository.int
  * Se ubica en la capa de Infraestructura.
  */
 export class JsonProductRepository implements IProductRepository {
-  private readonly dbPath = path.resolve(process.cwd(), 'src', 'data', 'products.json');
+  private readonly dbPath = path.resolve(
+    process.cwd(),
+    "src",
+    "data",
+    "products.json",
+  );
 
   /**
    * @private
@@ -21,10 +26,10 @@ export class JsonProductRepository implements IProductRepository {
    */
   private async readDatabase(): Promise<Product[]> {
     try {
-      const data = await fs.readFile(this.dbPath, 'utf-8');
+      const data = await fs.readFile(this.dbPath, "utf-8");
       return JSON.parse(data) as Product[];
     } catch (error) {
-      console.error('Error reading or parsing the database file:', error);
+      console.error("Error reading or parsing the database file:", error);
       // Si el archivo no existe o hay un error de parseo, retornamos un array vacío.
       return [];
     }

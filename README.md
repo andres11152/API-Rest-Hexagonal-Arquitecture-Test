@@ -18,18 +18,18 @@
 
 ---
 
-##  Tabla de Contenidos
+## Tabla de Contenidos
 
 1.  🚀 Descripción del Proyecto
 2.  ✨ Características
 3.  🏛️ Arquitectura y Decisiones de Diseño
 4.  🛠️ Stack Tecnológico
 5.  🏁 Instalación y Ejecución
-  6.  📦 Configuración
-  7.  ✅ Calidad de Código
-  8.  🧪 Pruebas
-  9.  🔄 Integración Continua (CI/CD)
-  10. 📖 Referencia de la API
+6.  📦 Configuración
+7.  ✅ Calidad de Código
+8.  🧪 Pruebas
+9.  🔄 Integración Continua (CI/CD)
+10. 📖 Referencia de la API
 
 ---
 
@@ -39,9 +39,9 @@ Este proyecto implementa una API REST para la consulta y comparación de product
 
 ## ✨ Características
 
-*   **Listado de productos:** Obtén una lista completa de los productos disponibles.
-*   **Detalle de producto:** Consulta la información detallada de un producto por su ID.
-*   **Comparación de productos:** Compara dos productos y recibe un resumen detallado de sus características y diferencias.
+- **Listado de productos:** Obtén una lista completa de los productos disponibles.
+- **Detalle de producto:** Consulta la información detallada de un producto por su ID.
+- **Comparación de productos:** Compara dos productos y recibe un resumen detallado de sus características y diferencias.
 
 ## 🏛️ Arquitectura y Decisiones de Diseño
 
@@ -51,11 +51,11 @@ La arquitectura de la aplicación es una decisión deliberada para demostrar una
 
 Se ha implementado una estricta separación entre el núcleo de la aplicación (dominio y lógica de negocio) y los detalles de la infraestructura (framework web, base de datos). Esto permite que la lógica de negocio sea independiente de la tecnología externa, facilitando su evolución y testeo.
 
-*   **`domain` (El Núcleo):** Contiene las entidades de negocio (`Product`), las excepciones de dominio (`ProductNotFoundException`) y los "puertos" (interfaces como `IProductRepository`). Esta capa es pura, agnóstica a la tecnología y no tiene dependencias externas.
-*   **`application` (Lógica de Negocio):** Contiene los casos de uso (`ProductService`) que orquestan la lógica de negocio. Depende únicamente de las abstracciones (puertos) del dominio.
-*   **`infrastructure` (El Mundo Exterior):** Contiene los "adaptadores" que implementan los puertos y interactúan con el mundo exterior.
-    *   **Adaptadores de Entrada (Driving Adapters):** Inician la interacción, como la API REST (controladores de Express, rutas).
-    *   **Adaptadores de Salida (Driven Adapters):** Son controlados por la aplicación, como la implementación del repositorio (`JsonProductRepository`) que se conecta a la fuente de datos.
+- **`domain` (El Núcleo):** Contiene las entidades de negocio (`Product`), las excepciones de dominio (`ProductNotFoundException`) y los "puertos" (interfaces como `IProductRepository`). Esta capa es pura, agnóstica a la tecnología y no tiene dependencias externas.
+- **`application` (Lógica de Negocio):** Contiene los casos de uso (`ProductService`) que orquestan la lógica de negocio. Depende únicamente de las abstracciones (puertos) del dominio.
+- **`infrastructure` (El Mundo Exterior):** Contiene los "adaptadores" que implementan los puertos y interactúan con el mundo exterior.
+  - **Adaptadores de Entrada (Driving Adapters):** Inician la interacción, como la API REST (controladores de Express, rutas).
+  - **Adaptadores de Salida (Driven Adapters):** Son controlados por la aplicación, como la implementación del repositorio (`JsonProductRepository`) que se conecta a la fuente de datos.
 
 ```
     +-------------------+      +----------------------+      +--------------------+
@@ -77,41 +77,45 @@ El diseño respeta los principios SOLID, con un fuerte énfasis en el **Principi
 
 ### Otras Decisiones Clave
 
-*   **Persistencia Táctica:** Para esta prueba, se implementó un repositorio que lee datos desde un archivo `products.json`. Esta decisión simplifica la configuración y ejecución. Gracias a la arquitectura, migrar a **PostgreSQL** o **MongoDB** solo requeriría crear un nuevo repositorio que implemente `IProductRepository` y cambiar una línea en la configuración de inyección de dependencias, sin afectar el resto de la aplicación.
-*   **Manejo de Errores Centralizado:** Un middleware de Express captura excepciones personalizadas del dominio (ej. `ProductNotFoundException`) y las traduce a respuestas HTTP apropiadas (ej. `404 Not Found`), manteniendo los controladores limpios.
-*   **Validación de Entrada:** Se utiliza `express-validator` en middlewares para validar los datos de entrada a nivel de ruta, delegando esta responsabilidad y manteniendo los controladores enfocados en su tarea principal.
+- **Persistencia Táctica:** Para esta prueba, se implementó un repositorio que lee datos desde un archivo `products.json`. Esta decisión simplifica la configuración y ejecución. Gracias a la arquitectura, migrar a **PostgreSQL** o **MongoDB** solo requeriría crear un nuevo repositorio que implemente `IProductRepository` y cambiar una línea en la configuración de inyección de dependencias, sin afectar el resto de la aplicación.
+- **Manejo de Errores Centralizado:** Un middleware de Express captura excepciones personalizadas del dominio (ej. `ProductNotFoundException`) y las traduce a respuestas HTTP apropiadas (ej. `404 Not Found`), manteniendo los controladores limpios.
+- **Validación de Entrada:** Se utiliza `express-validator` en middlewares para validar los datos de entrada a nivel de ruta, delegando esta responsabilidad y manteniendo los controladores enfocados en su tarea principal.
 
 ## 🛠️ Stack Tecnológico
 
-*   **Lenguaje:** TypeScript
-*   **Backend:** Node.js, Express.js
-*   **Testing:** Jest, Supertest
-*   **Validación:** `express-validator`
-*   **Calidad de Código:** ESLint, Prettier
+- **Lenguaje:** TypeScript
+- **Backend:** Node.js, Express.js
+- **Testing:** Jest, Supertest
+- **Validación:** `express-validator`
+- **Calidad de Código:** ESLint, Prettier
 
 ## 🏁 Instalación y Ejecución
 
 Asegúrate de tener Node.js (v16 o superior) y npm instalados.
 
 1.  **Clonar el repositorio:**
+
     ```bash
     git clone https://github.com/andres11152/API-Rest-Hexagonal-Arquitecture-Test
     cd API-Rest-Hexagonal-Arquitecture-Test
     ```
 
 2.  **Instalar dependencias:**
+
     ```bash
     npm install
     ```
 
 3.  **Ejecutar en modo desarrollo:**
     El servidor se iniciará en `http://localhost:8080` y se recargará automáticamente con los cambios.
+
     ```bash
     npm run dev
     ```
 
 4.  **Construir para producción:**
     Esto compilará el código TypeScript a JavaScript en el directorio `dist/`.
+
     ```bash
     npm run build
     ```
@@ -148,6 +152,7 @@ npm run format
 El proyecto incluye tests unitarios y de integración para garantizar la calidad y el correcto funcionamiento de la lógica de negocio y los endpoints.
 
 Para ejecutar todas las pruebas:
+
 ```bash
 npm test
 ```
@@ -158,105 +163,105 @@ npm test
 
 Retorna una lista de todos los productos disponibles.
 
-*   **Respuesta Exitosa (`200 OK`):**
-    ```json
-    [
-      {
-        "id": "1",
-        "name": "Laptop Pro X animal X prueba",
-        "price": 999900,
-        "rating": 4.8,
-        "image": "https://example.com/images/laptop_pro_x.jpg",
-        "description": "Una laptop de alto rendimiento para profesionales creativos y desarrolladores. Potencia y portabilidad en un diseño elegante.",
-        "specs": {
-          "screen": "15.6 pulgadas, 4K UHD",
-          "processor": "Intel Core i9, 12th Gen 2",
-          "ram": "32GB DDR5",
-          "storage": "1TB NVMe SSD",
-          "graphics": "NVIDIA GeForce RTX 4070"
-        },
-        "currency": "COP",
-        "category": "General"
-      }
-    ]
-    ```
+- **Respuesta Exitosa (`200 OK`):**
+  ```json
+  [
+    {
+      "id": "1",
+      "name": "Laptop Pro X animal X prueba",
+      "price": 999900,
+      "rating": 4.8,
+      "image": "https://example.com/images/laptop_pro_x.jpg",
+      "description": "Una laptop de alto rendimiento para profesionales creativos y desarrolladores. Potencia y portabilidad en un diseño elegante.",
+      "specs": {
+        "screen": "15.6 pulgadas, 4K UHD",
+        "processor": "Intel Core i9, 12th Gen 2",
+        "ram": "32GB DDR5",
+        "storage": "1TB NVMe SSD",
+        "graphics": "NVIDIA GeForce RTX 4070"
+      },
+      "currency": "COP",
+      "category": "General"
+    }
+  ]
+  ```
 
 ### `GET /products/{id}`
 
 Retorna un producto específico según su ID.
 
-*   **Parámetros de URL:**
-    *   `id` (string, requerido): El ID del producto.
-*   **Respuesta Exitosa (`200 OK`):** Un objeto de producto (similar al del listado).
-*   **Respuestas de Error:**
-    *   `400 Bad Request`: Si el ID proporcionado no tiene un formato válido.
-    *   `404 Not Found`: Si no se encuentra un producto con el ID especificado.
+- **Parámetros de URL:**
+  - `id` (string, requerido): El ID del producto.
+- **Respuesta Exitosa (`200 OK`):** Un objeto de producto (similar al del listado).
+- **Respuestas de Error:**
+  - `400 Bad Request`: Si el ID proporcionado no tiene un formato válido.
+  - `404 Not Found`: Si no se encuentra un producto con el ID especificado.
 
 ### `GET /products/compare`
 
 Compara dos productos y devuelve un resumen de sus diferencias.
 
-*   **Query Params:**
-    *   `id1` (string, requerido): ID del primer producto.
-    *   `id2` (string, requerido): ID del segundo producto.
-*   **Respuesta Exitosa (`200 OK`):**
-    ```json
-    {
-      "product1": {
-        "id": "1",
-        "name": "Laptop Pro X animal X prueba",
-        "price": 999900,
-        "rating": 4.8,
-        "image": "https://example.com/images/laptop_pro_x.jpg",
-        "description": "Una laptop de alto rendimiento para profesionales creativos y desarrolladores. Potencia y portabilidad en un diseño elegante.",
-        "specs": {
-          "screen": "15.6 pulgadas, 4K UHD",
-          "processor": "Intel Core i9, 12th Gen 2",
-          "ram": "32GB DDR5",
-          "storage": "1TB NVMe SSD",
-          "graphics": "NVIDIA GeForce RTX 4070"
-        },
-        "currency": "COP",
-        "category": "General"
+- **Query Params:**
+  - `id1` (string, requerido): ID del primer producto.
+  - `id2` (string, requerido): ID del segundo producto.
+- **Respuesta Exitosa (`200 OK`):**
+  ```json
+  {
+    "product1": {
+      "id": "1",
+      "name": "Laptop Pro X animal X prueba",
+      "price": 999900,
+      "rating": 4.8,
+      "image": "https://example.com/images/laptop_pro_x.jpg",
+      "description": "Una laptop de alto rendimiento para profesionales creativos y desarrolladores. Potencia y portabilidad en un diseño elegante.",
+      "specs": {
+        "screen": "15.6 pulgadas, 4K UHD",
+        "processor": "Intel Core i9, 12th Gen 2",
+        "ram": "32GB DDR5",
+        "storage": "1TB NVMe SSD",
+        "graphics": "NVIDIA GeForce RTX 4070"
       },
-      "product2": {
-        "id": "2",
-        "name": "Smartphone Galaxy S25",
-        "price": 899900,
-        "rating": 4.7,
-        "image": "https://example.com/images/galaxy_s25.jpg",
-        "description": "El último smartphone con una cámara revolucionaria y una pantalla inmersiva. Conectividad 5G y rendimiento sin igual.",
-        "specs": {
-          "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
-          "processor": "Snapdragon 8 Gen 4",
-          "ram": "12GB",
-          "storage": "256GB UFS 4.0",
-          "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
-        },
-        "currency": "COP",
-        "category": "General"
+      "currency": "COP",
+      "category": "General"
+    },
+    "product2": {
+      "id": "2",
+      "name": "Smartphone Galaxy S25",
+      "price": 899900,
+      "rating": 4.7,
+      "image": "https://example.com/images/galaxy_s25.jpg",
+      "description": "El último smartphone con una cámara revolucionaria y una pantalla inmersiva. Conectividad 5G y rendimiento sin igual.",
+      "specs": {
+        "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
+        "processor": "Snapdragon 8 Gen 4",
+        "ram": "12GB",
+        "storage": "256GB UFS 4.0",
+        "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
       },
-      "comparison": {
-        "priceDifference": 100000,
-        "ratingDifference": 0.1,
-        "common_specs": [],
-        "unique_specs_product1": {
-          "screen": "15.6 pulgadas, 4K UHD",
-          "processor": "Intel Core i9, 12th Gen 2",
-          "ram": "32GB DDR5",
-          "storage": "1TB NVMe SSD",
-          "graphics": "NVIDIA GeForce RTX 4070"
-        },
-        "unique_specs_product2": {
-          "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
-          "processor": "Snapdragon 8 Gen 4",
-          "ram": "12GB",
-          "storage": "256GB UFS 4.0",
-          "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
-        }
+      "currency": "COP",
+      "category": "General"
+    },
+    "comparison": {
+      "priceDifference": 100000,
+      "ratingDifference": 0.1,
+      "common_specs": [],
+      "unique_specs_product1": {
+        "screen": "15.6 pulgadas, 4K UHD",
+        "processor": "Intel Core i9, 12th Gen 2",
+        "ram": "32GB DDR5",
+        "storage": "1TB NVMe SSD",
+        "graphics": "NVIDIA GeForce RTX 4070"
+      },
+      "unique_specs_product2": {
+        "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
+        "processor": "Snapdragon 8 Gen 4",
+        "ram": "12GB",
+        "storage": "256GB UFS 4.0",
+        "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
       }
     }
-    ```
-*   **Respuestas de Error:**
-    *   `400 Bad Request`: Si `id1` o `id2` faltan en la consulta o no son válidos.
-    *   `404 Not Found`: Si alguno de los productos no se encuentra.
+  }
+  ```
+- **Respuestas de Error:**
+  - `400 Bad Request`: Si `id1` o `id2` faltan en la consulta o no son válidos.
+  - `404 Not Found`: Si alguno de los productos no se encuentra.

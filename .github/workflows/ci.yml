@@ -5,9 +5,9 @@ name: CI # El nombre del workflow que aparecerá en GitHub Actions
 # Disparadores: Cuándo se ejecutará este workflow
 on:
   push:
-    branches: [ main, develop ] # Al hacer push a las ramas main o develop
+    branches: [main, develop] # Al hacer push a las ramas main o develop
   pull_request:
-    branches: [ main, develop ] # Al crear un Pull Request hacia main o develop
+    branches: [main, develop] # Al crear un Pull Request hacia main o develop
 
 jobs:
   # Definimos un "trabajo" llamado "build-and-test"
@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm' # Habilita el caché para acelerar futuras instalaciones
+          cache: "npm" # Habilita el caché para acelerar futuras instalaciones
 
       # 3. Instala las dependencias de forma limpia y rápida
       - name: Install dependencies
@@ -41,10 +41,10 @@ jobs:
       - name: Format code
         run: npm run format
 
-      # 4. Ejecuta el linter para verificar la calidad del código
+      # 5. Ejecuta el linter para verificar la calidad del código
       - name: Run linter
         run: npm run lint
 
-      # 5. Ejecuta las pruebas
+      # 6. Ejecuta las pruebas
       - name: Run tests
         run: npm test

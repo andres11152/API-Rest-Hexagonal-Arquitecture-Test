@@ -1,10 +1,10 @@
-import { Router } from 'express';
-import { ProductController } from '../controllers/product.controller';
+import { Router } from "express";
+import { ProductController } from "../controllers/product.controller";
 import {
   validateCompareProducts,
   validateGetProductById,
   handleValidationErrors,
-} from '../middlewares/validation.middleware';
+} from "../middlewares/validation.middleware";
 
 /**
  * Crea y configura las rutas para los productos.
@@ -16,20 +16,20 @@ export const createProductRoutes = (controller: ProductController): Router => {
 
   // Se utilizan los métodos del controlador inyectado.
   // Los métodos en el controlador ya son arrow functions, por lo que no es necesario usar .bind().
-  router.get('/', controller.getAllProducts);
+  router.get("/", controller.getAllProducts);
 
   router.get(
-    '/compare',
+    "/compare",
     validateCompareProducts,
     handleValidationErrors,
-    controller.compareProducts
+    controller.compareProducts,
   );
 
   router.get(
-    '/:id',
+    "/:id",
     validateGetProductById,
     handleValidationErrors,
-    controller.getProductById
+    controller.getProductById,
   );
 
   return router;

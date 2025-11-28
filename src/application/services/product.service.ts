@@ -1,7 +1,7 @@
-import { ProductNotFoundException } from '@/domain/exceptions/product-not-found.exception';
-import { Product } from '@/domain/entities/product.entity';
-import { ProductComparison } from '@/domain/entities/product-comparison.entity';
-import { IProductRepository } from '@/domain/repositories/product-repository.interface';
+import { ProductNotFoundException } from "@/domain/exceptions/product-not-found.exception";
+import { Product } from "@/domain/entities/product.entity";
+import { ProductComparison } from "@/domain/entities/product-comparison.entity";
+import { IProductRepository } from "@/domain/repositories/product-repository.interface";
 
 export class ProductService {
   constructor(private readonly productRepository: IProductRepository) {}
@@ -27,16 +27,20 @@ export class ProductService {
     if (!product1 || !product2) {
       const notFoundId = !product1 ? id1 : id2;
       throw new ProductNotFoundException(
-        `Producto con id ${notFoundId} no fue encontrado para la comparación`
+        `Producto con id ${notFoundId} no fue encontrado para la comparación`,
       );
     }
 
     const priceDifference = Math.abs(product1.price - product2.price);
-    const ratingDifference = parseFloat(Math.abs(product1.rating - product2.rating).toPrecision(2));
+    const ratingDifference = parseFloat(
+      Math.abs(product1.rating - product2.rating).toPrecision(2),
+    );
 
     const specs1 = product1.specs || {};
     const specs2 = product2.specs || {};
-    const allSpecKeys = Array.from(new Set([...Object.keys(specs1), ...Object.keys(specs2)]));
+    const allSpecKeys = Array.from(
+      new Set([...Object.keys(specs1), ...Object.keys(specs2)]),
+    );
 
     const common_specs: string[] = [];
     const unique_specs_product1: Record<string, string> = {};
