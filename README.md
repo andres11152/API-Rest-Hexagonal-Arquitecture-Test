@@ -1,7 +1,7 @@
 <div align="center">
-  <h1 align="center">API REST de Comparación de Productos</h1>
+  <h1 align="center">Product Comparison REST API</h1>
   <p align="center">
-    Una API RESTful robusta construida con Node.js, Express y TypeScript, siguiendo los principios de la Arquitectura Hexagonal.
+    A robust RESTful API built with Node.js, Express, and TypeScript, following the principles of Hexagonal Architecture.
   </p>
   
   <!-- Badges -->
@@ -18,45 +18,45 @@
 
 ---
 
-## Tabla de Contenidos
+## Table of Contents
 
-1.  🚀 Descripción del Proyecto
-2.  ✨ Características
-3.  🏛️ Arquitectura y Decisiones de Diseño
-  4.  📂 Estructura de Carpetas
-  5.  🛠️ Stack Tecnológico
-  6.  🏁 Instalación y Ejecución
-  7.  📦 Configuración
-  8.  ✅ Calidad de Código
-  9.  🧪 Pruebas
-  10. 🔄 Integración Continua (CI/CD)
-  11. 📖 Referencia de la API
+1.  🚀 Project Description
+2.  ✨ Features
+3.  🏛️ Architecture and Design Decisions
+4.  📂 Folder Structure
+5.  🛠️ Tech Stack
+6.  🏁 Installation and Setup
+7.  📦 Configuration
+8.  ✅ Code Quality
+9.  🧪 Testing
+10. 🔄 Continuous Integration (CI/CD)
+11. 📖 API Reference
 
 ---
 
-## 🚀 Descripción del Proyecto
+## 🚀 Project Description
 
-Este proyecto implementa una API REST para la consulta y comparación de productos. Ha sido diseñado como una demostración de backend moderno, aplicando patrones de diseño de software avanzados como la **Arquitectura Hexagonal (Puertos y Adaptadores)** y los principios **SOLID**. El objetivo es crear una base de código desacoplada, escalable, mantenible y altamente testeable.
+This project implements a REST API for querying and comparing products. It is designed as a modern backend showcase, applying advanced software design patterns like **Hexagonal Architecture (Ports & Adapters)** and **SOLID** principles. The goal is to create a decoupled, scalable, maintainable, and highly testable codebase.
 
-## ✨ Características
+## ✨ Features
 
-- **Listado de productos:** Obtén una lista completa de los productos disponibles.
-- **Detalle de producto:** Consulta la información detallada de un producto por su ID.
-- **Comparación de productos:** Compara dos productos y recibe un resumen detallado de sus características y diferencias.
+- **Product Listing:** Get a complete list of available products.
+- **Product Detail:** Query detailed information for a product by its ID.
+- **Product Comparison:** Compare two products and receive a detailed summary of their features and differences.
 
-## 🏛️ Arquitectura y Decisiones de Diseño
+## 🏛️ Architecture and Design Decisions
 
-La arquitectura de la aplicación es una decisión deliberada para demostrar una base de software robusta, desacoplada y altamente testeable, ideal para entornos empresariales.
+The application's architecture is a deliberate choice to demonstrate a robust, decoupled, and highly testable software foundation, ideal for enterprise environments.
 
-### Arquitectura Hexagonal (Puertos y Adaptadores)
+### Hexagonal Architecture (Ports & Adapters)
 
-Se ha implementado una estricta separación entre el núcleo de la aplicación (dominio y lógica de negocio) y los detalles de la infraestructura (framework web, base de datos). Esto permite que la lógica de negocio sea independiente de la tecnología externa, facilitando su evolución y testeo.
+A strict separation has been implemented between the application's core (domain and business logic) and the infrastructure details (web framework, database). This allows the business logic to be independent of external technology, facilitating its evolution and testing.
 
-- **`domain` (El Núcleo):** Contiene las **Entidades de Dominio Ricas** (clases como `Product` y `ProductComparison` que encapsulan datos y lógica), las excepciones de dominio y los "puertos" (interfaces como `IProductRepository`). Esta capa es pura, agnóstica a la tecnología y no tiene dependencias externas.
-- **`application` (Lógica de Negocio):** Contiene los casos de uso (`ProductService`) que orquestan la lógica de negocio. Depende únicamente de las abstracciones (puertos) del dominio.
-- **`infrastructure` (El Mundo Exterior):** Contiene los "adaptadores" que implementan los puertos y interactúan con el mundo exterior.
-  - **Adaptadores de Entrada (Driving Adapters):** Inician la interacción, como la API REST (controladores de Express, rutas).
-  - **Adaptadores de Salida (Driven Adapters):** Son controlados por la aplicación, como la implementación del repositorio (`JsonProductRepository`) que se conecta a la fuente de datos.
+- **`domain` (The Core):** Contains the **Rich Domain Entities** (classes like `Product` and `ProductComparison` that encapsulate data and logic), domain-specific exceptions, and "ports" (interfaces like `IProductRepository`). This layer is pure, technology-agnostic, and has no external dependencies.
+- **`application` (Business Logic):** Contains the use cases (`ProductService`) that orchestrate the business logic. It depends solely on the domain's abstractions (ports).
+- **`infrastructure` (The Outside World):** Contains the "adapters" that implement the ports and interact with the outside world.
+  - **Driving Adapters:** Initiate interaction, such as the REST API (Express controllers, routes).
+  - **Driven Adapters:** Are controlled by the application, such as the repository implementation (`JsonProductRepository`) that connects to the data source.
 
 ```
     +-------------------+      +----------------------+      +--------------------+
