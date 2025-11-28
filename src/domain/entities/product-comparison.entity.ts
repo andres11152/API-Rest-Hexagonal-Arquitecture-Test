@@ -6,5 +6,8 @@ export interface ProductComparison {
   comparison: {
     priceDifference: number;
     ratingDifference: number;
+    common_specs: string[];
+    unique_specs_product1: Record<string, string>;
+    unique_specs_product2: Record<string, string>;
   };
 }

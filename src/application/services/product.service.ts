@@ -31,12 +31,44 @@ export class ProductService {
       );
     }
 
+    const priceDifference = Math.abs(product1.price - product2.price);
+    const ratingDifference = parseFloat(Math.abs(product1.rating - product2.rating).toPrecision(2));
+
+    const specs1 = product1.specs || {};
+    const specs2 = product2.specs || {};
+    const allSpecKeys = Array.from(new Set([...Object.keys(specs1), ...Object.keys(specs2)]));
+
+    const common_specs: string[] = [];
+    const unique_specs_product1: Record<string, string> = {};
+    const unique_specs_product2: Record<string, string> = {};
+
+    for (const key of allSpecKeys) {
+      const value1 = specs1[key];
+      const value2 = specs2[key];
+
+      if (value1 && value2) {
+        if (value1 === value2) {
+          common_specs.push(key);
+        } else {
+          unique_specs_product1[key] = value1;
+          unique_specs_product2[key] = value2;
+        }
+      } else if (value1) {
+        unique_specs_product1[key] = value1;
+      } else if (value2) {
+        unique_specs_product2[key] = value2;
+      }
+    }
+
     return {
       product1,
       product2,
       comparison: {
-        priceDifference: product1.price - product2.price,
-        ratingDifference: parseFloat((product1.rating - product2.rating).toFixed(2)),
+        priceDifference,
+        ratingDifference,
+        common_specs,
+        unique_specs_product1,
+        unique_specs_product2,
       },
     };
   }
