@@ -8,6 +8,8 @@
   <p align="center">
     <img src="https://img.shields.io/badge/Node.js-18.x-blue?logo=node.js" alt="Node.js">
     <img src="https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript" alt="TypeScript">
+    <a href="https://github.com/andres11152/API-Rest-Hexagonal-Arquitecture-Test/actions/workflows/ci.yml"><img src="https://github.com/andres11152/API-Rest-Hexagonal-Arquitecture-Test/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
+    <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" alt="Code Style: Prettier">
     <img src="https://img.shields.io/badge/Express.js-4.x-green?logo=express" alt="Express.js">
     <img src="https://img.shields.io/badge/Jest-29.x-red?logo=jest" alt="Jest">
     <img src="https://img.shields.io/badge/Arquitectura-Hexagonal-purple" alt="Hexagonal Architecture">
@@ -23,8 +25,11 @@
 3.  🏛️ Arquitectura y Decisiones de Diseño
 4.  🛠️ Stack Tecnológico
 5.  🏁 Instalación y Ejecución
-6.  🧪 Pruebas
-7.  📖 Referencia de la API
+  6.  📦 Configuración
+  7.  ✅ Calidad de Código
+  8.  🧪 Pruebas
+  9.  🔄 Integración Continua (CI/CD)
+  10. 📖 Referencia de la API
 
 ---
 
@@ -78,10 +83,11 @@ El diseño respeta los principios SOLID, con un fuerte énfasis en el **Principi
 
 ## 🛠️ Stack Tecnológico
 
-*   **Backend:** Node.js, Express.js
 *   **Lenguaje:** TypeScript
+*   **Backend:** Node.js, Express.js
 *   **Testing:** Jest, Supertest
 *   **Validación:** `express-validator`
+*   **Calidad de Código:** ESLint, Prettier
 
 ## 🏁 Instalación y Ejecución
 
@@ -115,6 +121,27 @@ Asegúrate de tener Node.js (v16 o superior) y npm instalados.
     ```bash
     npm start
     ```
+
+## 📦 Configuración
+
+El proyecto puede ser configurado a través de variables de entorno. Para ello, puedes crear un archivo `.env` en la raíz del proyecto.
+
+```env
+# Puerto en el que correrá el servidor
+PORT=8080
+```
+
+## ✅ Calidad de Código
+
+Se utiliza ESLint y Prettier para mantener un estilo de código limpio y consistente. Para verificar y formatear el código, puedes usar los siguientes comandos:
+
+```bash
+# Ejecutar el linter para encontrar errores de estilo
+npm run lint
+
+# Formatear automáticamente el código
+npm run format
+```
 
 ## 🧪 Pruebas
 

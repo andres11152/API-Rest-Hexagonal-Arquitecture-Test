@@ -1,7 +1,7 @@
 import { ProductService } from '@/application/services/product.service';
 import { ProductNotFoundException } from '@/domain/exceptions/product-not-found.exception';
-import { Product } from '@/domain/entities/product';
-import { IProductRepository } from '@/domain/repositories/IProductRepository';
+import { Product } from '@/domain/entities/product.entity';
+import { IProductRepository } from '@/domain/repositories/product-repository.interface';
 
 // Creamos un mock del repositorio. Jest reemplazará todas las funciones
 // de la interfaz con funciones mock.
