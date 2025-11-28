@@ -23,13 +23,14 @@
 1.  🚀 Descripción del Proyecto
 2.  ✨ Características
 3.  🏛️ Arquitectura y Decisiones de Diseño
-4.  🛠️ Stack Tecnológico
-5.  🏁 Instalación y Ejecución
-6.  📦 Configuración
-7.  ✅ Calidad de Código
-8.  🧪 Pruebas
-9.  🔄 Integración Continua (CI/CD)
-10. 📖 Referencia de la API
+  4.  📂 Estructura de Carpetas
+  5.  🛠️ Stack Tecnológico
+  6.  🏁 Instalación y Ejecución
+  7.  📦 Configuración
+  8.  ✅ Calidad de Código
+  9.  🧪 Pruebas
+  10. 🔄 Integración Continua (CI/CD)
+  11. 📖 Referencia de la API
 
 ---
 
@@ -51,7 +52,7 @@ La arquitectura de la aplicación es una decisión deliberada para demostrar una
 
 Se ha implementado una estricta separación entre el núcleo de la aplicación (dominio y lógica de negocio) y los detalles de la infraestructura (framework web, base de datos). Esto permite que la lógica de negocio sea independiente de la tecnología externa, facilitando su evolución y testeo.
 
-- **`domain` (El Núcleo):** Contiene las entidades de negocio (`Product`), las excepciones de dominio (`ProductNotFoundException`) y los "puertos" (interfaces como `IProductRepository`). Esta capa es pura, agnóstica a la tecnología y no tiene dependencias externas.
+- **`domain` (El Núcleo):** Contiene las **Entidades de Dominio Ricas** (clases como `Product` y `ProductComparison` que encapsulan datos y lógica), las excepciones de dominio y los "puertos" (interfaces como `IProductRepository`). Esta capa es pura, agnóstica a la tecnología y no tiene dependencias externas.
 - **`application` (Lógica de Negocio):** Contiene los casos de uso (`ProductService`) que orquestan la lógica de negocio. Depende únicamente de las abstracciones (puertos) del dominio.
 - **`infrastructure` (El Mundo Exterior):** Contiene los "adaptadores" que implementan los puertos y interactúan con el mundo exterior.
   - **Adaptadores de Entrada (Driving Adapters):** Inician la interacción, como la API REST (controladores de Express, rutas).
@@ -80,6 +81,41 @@ El diseño respeta los principios SOLID, con un fuerte énfasis en el **Principi
 - **Persistencia Táctica:** Para esta prueba, se implementó un repositorio que lee datos desde un archivo `products.json`. Esta decisión simplifica la configuración y ejecución. Gracias a la arquitectura, migrar a **PostgreSQL** o **MongoDB** solo requeriría crear un nuevo repositorio que implemente `IProductRepository` y cambiar una línea en la configuración de inyección de dependencias, sin afectar el resto de la aplicación.
 - **Manejo de Errores Centralizado:** Un middleware de Express captura excepciones personalizadas del dominio (ej. `ProductNotFoundException`) y las traduce a respuestas HTTP apropiadas (ej. `404 Not Found`), manteniendo los controladores limpios.
 - **Validación de Entrada:** Se utiliza `express-validator` en middlewares para validar los datos de entrada a nivel de ruta, delegando esta responsabilidad y manteniendo los controladores enfocados en su tarea principal.
+
+## 🛠️ Stack Tecnológico
+
+### 📂 Estructura de Carpetas
+
+La estructura del directorio `src` está organizada para reflejar claramente la Arquitectura Hexagonal:
+
+```
+src/
+├── application/
+│   └── services/
+│       └── product.service.ts      # Orquesta los casos de uso (lógica de aplicación)
+├── domain/
+│   ├── entities/
+│   │   ├── product.entity.ts       # Entidad de dominio rica para Product
+│   │   └── product-comparison.entity.ts # Entidad de dominio rica para Comparison
+│   ├── exceptions/
+│   │   └── product-not-found.exception.ts # Excepciones específicas del dominio
+│   └── repositories/
+│       └── product-repository.interface.ts # Puerto de repositorio (contrato)
+├── infrastructure/
+│   ├── driven-adapters/            # Adaptadores controlados por la aplicación
+│   │   └── json-repository/
+│   │       └── json-product.repository.ts # Adaptador que implementa el puerto
+│   └── driving-adapters/           # Adaptadores que controlan la aplicación
+│       └── api-rest/
+│           ├── controllers/
+│           ├── mappers/
+│           ├── middlewares/
+│           └── routes/
+├── data/
+│   └── products.json               # Fuente de datos (detalle de infraestructura)
+├── app.ts                          # Configuración de Express y middlewares
+└── server.ts                       # Punto de entrada, inyección de dependencias y arranque del servidor
+```
 
 ## 🛠️ Stack Tecnológico
 
