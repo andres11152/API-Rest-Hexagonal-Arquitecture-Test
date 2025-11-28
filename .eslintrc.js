@@ -1,17 +1,22 @@
-// .eslintrc.js
 module.exports = {
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier", // <-- ¡Añade 'prettier' al final!
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
   ],
-  plugins: ["@typescript-eslint/eslint-plugin"],
+  plugins: ['@typescript-eslint/eslint-plugin'],
   env: {
     node: true,
     jest: true,
   },
   rules: {
-    // Puedes añadir reglas personalizadas aquí si lo necesitas
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      },
+    ],
   },
 };
