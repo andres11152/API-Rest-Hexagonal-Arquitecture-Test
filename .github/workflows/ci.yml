@@ -37,6 +37,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # 4. Formatea el código para asegurar consistencia
+      - name: Format code
+        run: npm run format
+
       # 4. Ejecuta el linter para verificar la calidad del código
       - name: Run linter
         run: npm run lint

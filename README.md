@@ -154,7 +154,7 @@ npm test
 
 ## 📖 Referencia de la API
 
-### `GET /api/products`
+### `GET /products`
 
 Retorna una lista de todos los productos disponibles.
 
@@ -181,7 +181,7 @@ Retorna una lista de todos los productos disponibles.
     ]
     ```
 
-### `GET /api/products/{id}`
+### `GET /products/{id}`
 
 Retorna un producto específico según su ID.
 
@@ -192,7 +192,7 @@ Retorna un producto específico según su ID.
     *   `400 Bad Request`: Si el ID proporcionado no tiene un formato válido.
     *   `404 Not Found`: Si no se encuentra un producto con el ID especificado.
 
-### `GET /api/products/compare`
+### `GET /products/compare`
 
 Compara dos productos y devuelve un resumen de sus diferencias.
 
