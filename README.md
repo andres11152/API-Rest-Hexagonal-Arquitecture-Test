@@ -179,34 +179,52 @@ Compara dos productos y devuelve un resumen de sus diferencias.
         "id": "1",
         "name": "Laptop Pro X animal X prueba",
         "price": 999900,
-        "currency": "COP",
         "rating": 4.8,
-        "category": "General",
         "image": "https://example.com/images/laptop_pro_x.jpg",
-        "description": "Una laptop de alto rendimiento...",
-        "specs": { "... specs del producto 1 ..." }
+        "description": "Una laptop de alto rendimiento para profesionales creativos y desarrolladores. Potencia y portabilidad en un diseño elegante.",
+        "specs": {
+          "screen": "15.6 pulgadas, 4K UHD",
+          "processor": "Intel Core i9, 12th Gen 2",
+          "ram": "32GB DDR5",
+          "storage": "1TB NVMe SSD",
+          "graphics": "NVIDIA GeForce RTX 4070"
+        },
+        "currency": "COP",
+        "category": "General"
       },
       "product2": {
         "id": "2",
         "name": "Smartphone Galaxy S25",
         "price": 899900,
-        "currency": "COP",
         "rating": 4.7,
-        "category": "General",
         "image": "https://example.com/images/galaxy_s25.jpg",
-        "description": "El último smartphone con una cámara...",
-        "specs": { "... specs del producto 2 ..." }
+        "description": "El último smartphone con una cámara revolucionaria y una pantalla inmersiva. Conectividad 5G y rendimiento sin igual.",
+        "specs": {
+          "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
+          "processor": "Snapdragon 8 Gen 4",
+          "ram": "12GB",
+          "storage": "256GB UFS 4.0",
+          "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
+        },
+        "currency": "COP",
+        "category": "General"
       },
       "comparison": {
         "priceDifference": 100000,
-        "ratingDifference": 0.10000000000000053,
-        "common_specs": [ "processor", "ram", "storage" ],
+        "ratingDifference": 0.1,
+        "common_specs": [],
         "unique_specs_product1": {
           "screen": "15.6 pulgadas, 4K UHD",
+          "processor": "Intel Core i9, 12th Gen 2",
+          "ram": "32GB DDR5",
+          "storage": "1TB NVMe SSD",
           "graphics": "NVIDIA GeForce RTX 4070"
         },
         "unique_specs_product2": {
           "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
+          "processor": "Snapdragon 8 Gen 4",
+          "ram": "12GB",
+          "storage": "256GB UFS 4.0",
           "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
         }
       }
