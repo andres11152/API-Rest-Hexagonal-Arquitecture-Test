@@ -1,85 +1,217 @@
-# API de Comparación de Productos
+<div align="center">
+  <h1 align="center">API REST de Comparación de Productos</h1>
+  <p align="center">
+    Una API RESTful robusta construida con Node.js, Express y TypeScript, siguiendo los principios de la Arquitectura Hexagonal.
+  </p>
+  
+  <!-- Badges -->
+  <p align="center">
+    <img src="https://img.shields.io/badge/Node.js-18.x-blue?logo=node.js" alt="Node.js">
+    <img src="https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript" alt="TypeScript">
+    <img src="https://img.shields.io/badge/Express.js-4.x-green?logo=express" alt="Express.js">
+    <img src="https://img.shields.io/badge/Jest-29.x-red?logo=jest" alt="Jest">
+    <img src="https://img.shields.io/badge/Arquitectura-Hexagonal-purple" alt="Hexagonal Architecture">
+  </p>
+</div>
 
-## 1. Descripción del Proyecto
+---
 
-Este proyecto es una implementación en TypeScript de una API RESTful para consultar y comparar productos. La solución está diseñada con un enfoque en la escalabilidad, mantenibilidad y buenas prácticas de desarrollo de software, demostrando una base arquitectónica sólida y lista para evolucionar hacia un sistema de producción.
+##  Tabla de Contenidos
 
-El servicio expone endpoints para listar todos los productos, obtener detalles de un producto específico y comparar dos productos por sus atributos.
+1.  🚀 Descripción del Proyecto
+2.  ✨ Características
+3.  🏛️ Arquitectura y Decisiones de Diseño
+4.  🛠️ Stack Tecnológico
+5.  🏁 Instalación y Ejecución
+6.  🧪 Pruebas
+7.  📖 Referencia de la API
 
-## 2. Decisiones de Arquitectura
+---
 
-La arquitectura de la aplicación es una decisión consciente para equilibrar la simplicidad requerida por el entorno de la prueba técnica con la robustez esperada en un sistema empresarial.
+## 🚀 Descripción del Proyecto
 
-*   **Arquitectura por Capas:** Se ha implementado una arquitectura clásica por capas (Controlador, Servicio, Repositorio/Modelo) para asegurar una clara **Separación de Responsabilidades**.
-    *   **Capa de Controladores:** Únicamente responsable de gestionar las peticiones y respuestas HTTP, delegando toda la lógica de negocio.
-    *   **Capa de Servicios:** Contiene la lógica de negocio principal (ej. cómo se comparan los productos), orquestando las operaciones y desacoplada de la capa de datos.
-    *   **Capa de Datos:** Abstrae el origen de los datos.
+Este proyecto implementa una API REST para la consulta y comparación de productos. Ha sido diseñado como una demostración de backend moderno, aplicando patrones de diseño de software avanzados como la **Arquitectura Hexagonal (Puertos y Adaptadores)** y los principios **SOLID**. El objetivo es crear una base de código desacoplada, escalable, mantenible y altamente testeable.
 
-*   **Principios SOLID:** El diseño respeta los principios SOLID. Por ejemplo, el **Principio de Inversión de Dependencias (DIP)** se logra inyectando el `ProductService` en el `ProductController`, en lugar de una implementación concreta. Esto facilita la sustitución y las pruebas.
+## ✨ Características
 
-*   **Persistencia en Memoria (Decisión Táctica):** Para el contexto de esta prueba técnica, se eligió una implementación de persistencia en memoria (`Array`). Esta decisión prioriza la **simplicidad y el rendimiento** en un entorno controlado, eliminando la necesidad de configurar una base de datos externa.
+*   **Listado de productos:** Obtén una lista completa de los productos disponibles.
+*   **Detalle de producto:** Consulta la información detallada de un producto por su ID.
+*   **Comparación de productos:** Compara dos productos y recibe un resumen detallado de sus características y diferencias.
 
-*   **Validación basada en Middlewares:** Se utiliza `express-validator` para validar los datos de entrada a nivel de ruta. Esto mantiene los controladores limpios y centrados en la lógica de negocio, delegando la responsabilidad de la validación a middlewares reutilizables que rechazan peticiones inválidas de forma temprana.
+## 🏛️ Arquitectura y Decisiones de Diseño
 
-    **Visión a Futuro:** En un entorno de producción, esta implementación sería reemplazada sin esfuerzo. Gracias al uso del **Patrón Repositorio**, simplemente se crearía una nueva implementación de repositorio (ej. `PostgresProductRepository`) utilizando un ORM como Prisma o TypeORM para conectar a una base de datos relacional como **PostgreSQL**. El resto de la aplicación no requeriría cambios.
+La arquitectura de la aplicación es una decisión deliberada para demostrar una base de software robusta, desacoplada y altamente testeable, ideal para entornos empresariales.
 
-## 3. Referencia de la API
+### Arquitectura Hexagonal (Puertos y Adaptadores)
 
-Los siguientes endpoints están disponibles:
+Se ha implementado una estricta separación entre el núcleo de la aplicación (dominio y lógica de negocio) y los detalles de la infraestructura (framework web, base de datos). Esto permite que la lógica de negocio sea independiente de la tecnología externa, facilitando su evolución y testeo.
 
-*   `GET /products`
-    *   **Descripción:** Devuelve una lista de todos los productos disponibles.
-    *   **Respuesta Exitosa:** `200 OK`
+*   **`domain` (El Núcleo):** Contiene las entidades de negocio (`Product`), las excepciones de dominio (`ProductNotFoundException`) y los "puertos" (interfaces como `IProductRepository`). Esta capa es pura, agnóstica a la tecnología y no tiene dependencias externas.
+*   **`application` (Lógica de Negocio):** Contiene los casos de uso (`ProductService`) que orquestan la lógica de negocio. Depende únicamente de las abstracciones (puertos) del dominio.
+*   **`infrastructure` (El Mundo Exterior):** Contiene los "adaptadores" que implementan los puertos y interactúan con el mundo exterior.
+    *   **Adaptadores de Entrada (Driving Adapters):** Inician la interacción, como la API REST (controladores de Express, rutas).
+    *   **Adaptadores de Salida (Driven Adapters):** Son controlados por la aplicación, como la implementación del repositorio (`JsonProductRepository`) que se conecta a la fuente de datos.
 
-*   `GET /products/{id}`
-    *   **Descripción:** Devuelve un producto específico según su ID.
-    *   **Respuesta Exitosa:** `200 OK`
-    *   **Respuestas de Error:**
-        *   `400 Bad Request` si el ID no es un número. Ejemplo de respuesta:
-            ```json
-            {
-              "errores": [
-                {
-                  "type": "field",
-                  "value": "abc",
-                  "msg": "El parámetro id debe ser un número.",
-                  "path": "id",
-                  "location": "params"
-                }
-              ]
-            }
-            ```
-        *   `404 Not Found` si el ID no existe.
+```
+    +-------------------+      +----------------------+      +--------------------+
+    |   Driving         |      |     Application      |      |   Driven           |
+    |   Adapters        |----->|       (Ports)        |----->|   Adapters         |
+    | (Controllers)     |      |                      |      | (Repositories)     |
+    +-------------------+      +----------------------+      +--------------------+
+                                      |
+                                      v
+                              +----------------+
+                              |     Domain     |
+                              | (Entities)     |
+                              +----------------+
+```
 
-*   `GET /products/compare?id1={id1}&id2={id2}`
-    *   **Descripción:** Compara dos productos y devuelve un resumen de sus diferencias.
-    *   **Respuesta Exitosa:** `200 OK`
-    *   **Respuestas de Error:**
-        *   `400 Bad Request` si `id1` o `id2` faltan o no son números.
-        *   `404 Not Found` si alguno de los IDs no existe.
+### Principios SOLID
 
-## 4. Instalación y Pruebas
+El diseño respeta los principios SOLID, con un fuerte énfasis en el **Principio de Inversión de Dependencias (DIP)**. Las capas de alto nivel (aplicación) no dependen de las de bajo nivel (infraestructura), sino de abstracciones (interfaces del dominio). Esto se logra mediante **Inyección de Dependencias**, configurada manualmente en `server.ts` para mantener la simplicidad del ejemplo.
 
-El proyecto utiliza Node.js y npm para la gestión de dependencias y como herramienta de construcción.
+### Otras Decisiones Clave
 
-1.  **Instalar dependencias:**
+*   **Persistencia Táctica:** Para esta prueba, se implementó un repositorio que lee datos desde un archivo `products.json`. Esta decisión simplifica la configuración y ejecución. Gracias a la arquitectura, migrar a **PostgreSQL** o **MongoDB** solo requeriría crear un nuevo repositorio que implemente `IProductRepository` y cambiar una línea en la configuración de inyección de dependencias, sin afectar el resto de la aplicación.
+*   **Manejo de Errores Centralizado:** Un middleware de Express captura excepciones personalizadas del dominio (ej. `ProductNotFoundException`) y las traduce a respuestas HTTP apropiadas (ej. `404 Not Found`), manteniendo los controladores limpios.
+*   **Validación de Entrada:** Se utiliza `express-validator` en middlewares para validar los datos de entrada a nivel de ruta, delegando esta responsabilidad y manteniendo los controladores enfocados en su tarea principal.
+
+## 🛠️ Stack Tecnológico
+
+*   **Backend:** Node.js, Express.js
+*   **Lenguaje:** TypeScript
+*   **Testing:** Jest, Supertest
+*   **Validación:** `express-validator`
+
+## 🏁 Instalación y Ejecución
+
+Asegúrate de tener Node.js (v16 o superior) y npm instalados.
+
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone https://github.com/tu-usuario/tu-repositorio.git
+    cd tu-repositorio
+    ```
+
+2.  **Instalar dependencias:**
     ```bash
     npm install
     ```
 
-2.  **Ejecutar pruebas:**
-    ```bash
-    npm test
-    ```
-
-3.  **Ejecutar la aplicación (modo desarrollo):**
+3.  **Ejecutar en modo desarrollo:**
+    El servidor se iniciará en `http://localhost:8080` y se recargará automáticamente con los cambios.
     ```bash
     npm run dev
     ```
-    La API estará disponible en `http://localhost:8080`.
 
-4.  **Construir y ejecutar la aplicación (modo producción):**
+4.  **Construir para producción:**
+    Esto compilará el código TypeScript a JavaScript en el directorio `dist/`.
     ```bash
     npm run build
+    ```
+
+5.  **Ejecutar en modo producción:**
+    Ejecuta la aplicación desde el código compilado.
+    ```bash
     npm start
     ```
+
+## 🧪 Pruebas
+
+El proyecto incluye tests unitarios y de integración para garantizar la calidad y el correcto funcionamiento de la lógica de negocio y los endpoints.
+
+Para ejecutar todas las pruebas:
+```bash
+npm test
+```
+
+## 📖 Referencia de la API
+
+### `GET /api/products`
+
+Retorna una lista de todos los productos disponibles.
+
+*   **Respuesta Exitosa (`200 OK`):**
+    ```json
+    [
+      {
+        "id": "1",
+        "name": "Laptop Pro X animal X prueba",
+        "price": 999900,
+        "rating": 4.8,
+        "image": "https://example.com/images/laptop_pro_x.jpg",
+        "description": "Una laptop de alto rendimiento para profesionales creativos y desarrolladores. Potencia y portabilidad en un diseño elegante.",
+        "specs": {
+          "screen": "15.6 pulgadas, 4K UHD",
+          "processor": "Intel Core i9, 12th Gen 2",
+          "ram": "32GB DDR5",
+          "storage": "1TB NVMe SSD",
+          "graphics": "NVIDIA GeForce RTX 4070"
+        },
+        "currency": "COP",
+        "category": "General"
+      }
+    ]
+    ```
+
+### `GET /api/products/{id}`
+
+Retorna un producto específico según su ID.
+
+*   **Parámetros de URL:**
+    *   `id` (string, requerido): El ID del producto.
+*   **Respuesta Exitosa (`200 OK`):** Un objeto de producto (similar al del listado).
+*   **Respuestas de Error:**
+    *   `400 Bad Request`: Si el ID proporcionado no tiene un formato válido.
+    *   `404 Not Found`: Si no se encuentra un producto con el ID especificado.
+
+### `GET /api/products/compare`
+
+Compara dos productos y devuelve un resumen de sus diferencias.
+
+*   **Query Params:**
+    *   `id1` (string, requerido): ID del primer producto.
+    *   `id2` (string, requerido): ID del segundo producto.
+*   **Respuesta Exitosa (`200 OK`):**
+    ```json
+    {
+      "product1": {
+        "id": "1",
+        "name": "Laptop Pro X animal X prueba",
+        "price": 999900,
+        "currency": "COP",
+        "rating": 4.8,
+        "category": "General",
+        "image": "https://example.com/images/laptop_pro_x.jpg",
+        "description": "Una laptop de alto rendimiento...",
+        "specs": { "... specs del producto 1 ..." }
+      },
+      "product2": {
+        "id": "2",
+        "name": "Smartphone Galaxy S25",
+        "price": 899900,
+        "currency": "COP",
+        "rating": 4.7,
+        "category": "General",
+        "image": "https://example.com/images/galaxy_s25.jpg",
+        "description": "El último smartphone con una cámara...",
+        "specs": { "... specs del producto 2 ..." }
+      },
+      "comparison": {
+        "priceDifference": 100000,
+        "ratingDifference": 0.10000000000000053,
+        "common_specs": [ "processor", "ram", "storage" ],
+        "unique_specs_product1": {
+          "screen": "15.6 pulgadas, 4K UHD",
+          "graphics": "NVIDIA GeForce RTX 4070"
+        },
+        "unique_specs_product2": {
+          "screen": "6.8 pulgadas, Dynamic AMOLED 2X",
+          "camera": "200MP Wide, 12MP Ultrawide, 10MP Telephoto"
+        }
+      }
+    }
+    ```
+*   **Respuestas de Error:**
+    *   `400 Bad Request`: Si `id1` o `id2` faltan en la consulta o no son válidos.
+    *   `404 Not Found`: Si alguno de los productos no se encuentra.
