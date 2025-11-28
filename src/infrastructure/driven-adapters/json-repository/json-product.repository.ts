@@ -1,58 +1,64 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import * as fs from "fs";
+import * as path from "path";
 import { Product } from "@/domain/entities/product.entity";
 import { IProductRepository } from "@/domain/repositories/product-repository.interface";
 
 /**
- * @class JsonProductRepository
- * @description Adaptador de persistencia que implementa IProductRepository.
- * Lee un JSON y convierte los datos crudos en instancias ricas de la entidad Product.
+ * Interfaz para describir la estructura de los datos crudos del JSON.
+ * Esto nos permite evitar el uso de `any` y tener un tipado estricto.
  */
+interface RawProduct {
+  id: string;
+  name: string;
+  price: number;
+  rating: number;
+  image_url: string;
+  description: string;
+  specs: { [key: string]: string };
+}
+
 export class JsonProductRepository implements IProductRepository {
-  private readonly dbPath = path.resolve(
-    process.cwd(),
-    "src",
-    "data",
-    "products.json",
-  );
+  private products: Product[] = [];
 
-  /**
-   * @private
-   * @method readDatabase
-   * @description Lee el JSON y mapea los datos crudos a instancias de la Clase Product.
-   */
-  private async readDatabase(): Promise<Product[]> {
+  constructor() {
+    this.loadProducts();
+  }
+
+  private loadProducts(): void {
     try {
-      const data = await fs.readFile(this.dbPath, "utf-8");
-      const rawProducts = JSON.parse(data);
+      const filePath = path.join(
+        __dirname,
+        "../../../data/products.json",
+      );
+      const fileContent = fs.readFileSync(filePath, "utf-8");
+      // Se utiliza la interfaz RawProduct para tipar los datos parseados.
+      const productsData: RawProduct[] = JSON.parse(fileContent);
 
-      // AQUÍ ESTÁ LA CLAVE: Mapeamos el objeto plano a una instancia real de la clase.
-      // Esto activa el constructor y las validaciones de la entidad.
-      return rawProducts.map((item: any) => new Product(
-        item.id,
-        item.name,
-        item.price,
-        item.rating,
-        item.image_url,
-        item.description,
-        item.specs
-      ));
-
+      // Se elimina el 'any' explícito, usando el tipo RawProduct en su lugar.
+      this.products = productsData.map(
+        (p: RawProduct) =>
+          new Product(
+            p.id,
+            p.name,
+            p.price,
+            p.rating,
+            p.image_url,
+            p.description,
+            p.specs,
+          ),
+      );
     } catch (error) {
-      console.error("Error reading or parsing the database file:", error);
-      return [];
+      console.error("Error al cargar los productos desde el JSON:", error);
+      this.products = [];
     }
   }
 
-  public async findAll(): Promise<Product[]> {
-    // Como readDatabase ya devuelve instancias de la clase, esto es directo.
-    return this.readDatabase();
+  async findAll(): Promise<Product[]> {
+    return Promise.resolve(this.products);
   }
 
-  public async findById(id: string): Promise<Product | null> {
-    const products = await this.readDatabase();
-    // Aquí 'products' ya contiene objetos con superpoderes (validaciones, métodos)
-    const product = products.find((p) => p.id === id);
-    return product || null;
+  async findById(id: string): Promise<Product | null> {
+    const product = this.products.find((p) => p.id === id);
+    return Promise.resolve(product || null);
   }
 }
